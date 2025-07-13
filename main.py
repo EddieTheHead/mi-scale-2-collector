@@ -30,7 +30,11 @@ def notification_handler(characteristic: BleakGATTCharacteristic, data: bytearra
     if message.stabilized:
         logger.info(message)
         append_to_csv(message)
-        google_sheets_connector.append_weight_measurement(message)
+        try:
+            google_sheets_connector.append_weight_measurement(message)
+        except Exception as e:
+            logging.error(e)
+            logging.error('Make sure you Google Docs API is authorized and correct document id set in google_sheets_connector.py')
 
 
 async def connect_and_measure():
