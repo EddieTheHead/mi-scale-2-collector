@@ -7,6 +7,7 @@ class ScaleMeasurement:
     weight: float
     unit: str
     time: int
+    collection_time: int
     stabilized: bool
 
 def parse_weight_measurement_message(buffer: bytearray) -> ScaleMeasurement:
@@ -36,4 +37,4 @@ def parse_weight_measurement_message(buffer: bytearray) -> ScaleMeasurement:
     else:
         timestamp = None
 
-    return ScaleMeasurement(weight=weight, unit=unit, time=timestamp, stabilized=is_stabilized)
+    return ScaleMeasurement(weight=weight, unit=unit, time=timestamp, collection_time=datetime.datetime.now(), stabilized=is_stabilized)
