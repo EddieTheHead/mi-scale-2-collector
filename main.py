@@ -5,6 +5,7 @@ from bleak import BleakClient, BleakScanner
 from bleak.uuids import normalize_uuid_16
 from bleak.backends.characteristic import BleakGATTCharacteristic
 
+import google_sheets_connector
 from weight_scale_measurement import ScaleMeasurement, parse_weight_measurement_message
 
 WEIGHT_SCALE_SERVICE_UUID = normalize_uuid_16(0x181d)
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def append_to_csv(measurement : ScaleMeasurement, file_path = OUT_FILE_PATH):
     with open(file_path, 'a') as out_file:
-        out_file.write(f'{measurement.time}, {measurement.weight}, {measurement.unit}, {measurement.stabilized}\n')
+        out_file.write(f'{measurement.time},{measurement.collection_time}, {measurement.weight}, {measurement.unit}, {measurement.stabilized}\n')
 
 def notification_handler(characteristic: BleakGATTCharacteristic, data: bytearray):
     """Handler for weight measurement notification"""
@@ -29,6 +30,7 @@ def notification_handler(characteristic: BleakGATTCharacteristic, data: bytearra
     if message.stabilized:
         logger.info(message)
         append_to_csv(message)
+        google_sheets_connector.append_weight_measurement(message)
 
 
 async def connect_and_measure():
