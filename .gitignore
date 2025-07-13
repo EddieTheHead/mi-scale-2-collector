@@ -211,3 +211,7 @@ __marimo__/
 
 # API keys 
 google_api_secret.json
+sheets.googleapis.com-python.json
+
+# Backup files 
+measurements.csv
